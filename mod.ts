@@ -131,13 +131,13 @@ class Base<Schema> {
 
 interface Updates<Schema> {
   /**Fields to update*/
-  set?: Partial<Record<keyof Schema, Schema[keyof Schema]>>;
-  /**Fields to increment.*/
-  increment?: Partial<Record<keyof Schema, number>>;
+  set?: Partial<Record<keyof Schema, typeof Schema[keyof Schema]>>;
+  /**Fields to increment by a number.*/
+  increment?: Partial<Record<keyof Schema, number>>
   /**Fields to append a list of values*/
-  append?: Partial<Record<keyof Schema, Schema[keyof Schema][]>>;
+  append?: Partial<Record<keyof Schema, typeof Schema[keyof Schema][]>>
   /**Fields to prepend a list of values*/
-  prepend?: Partial<Record<keyof Schema, Schema[keyof Schema][]>>;
+  prepend?: Partial<Record<keyof Schema, typeof Schema[keyof Schema][]>>
   /**List of fields to remove*/
   delete?: (keyof Schema)[];
 }
