@@ -20,12 +20,13 @@ export class Deta {
    * @param name The name of your database
    * @returns A new database instance
    */
-  Base<Model>(name: string) {
-    return new Base<Model>(this, name);
+  Base<Schema>(name: string) {
+    return new Base<Schema>(this, name);
   }
 }
 
-class Base<Model> {
+// TODO: Make this nested inside Deta
+class Base<Schema> {
   name: string;
   rootUrl: URL;
   deta: Deta;
@@ -39,7 +40,7 @@ class Base<Model> {
    * @param items A list of items to put
    * @returns
    */
-  async put(items: Model[]) {
+  async put(items: Schema[]) {
     const url = new URL(this.rootUrl + "/items");
     const body = JSON.stringify({ items });
     const response = await fetch(url, {
@@ -60,7 +61,7 @@ class Base<Model> {
       method: "GET",
       headers: this.deta.auth,
     });
-    return response.ok ? await response.json() as Model : null;
+    return response.ok ? await response.json() as Schema : null;
   }
   /**
    * @param key The key of the item to delete
@@ -80,7 +81,7 @@ class Base<Model> {
    * @param item The item to update
    * @returns
    */
-  async insert(item: Model) {
+  async insert(item: Schema) {
     const url = new URL(this.rootUrl + "/items");
     const body = JSON.stringify({ item });
     const response = await fetch(url, {
@@ -116,7 +117,7 @@ class Base<Model> {
     query: unknown[],
     limit?: number,
     last?: string,
-  ): Promise<QueryResponse<Model>> {
+  ): Promise<QueryResponse<Schema>> {
     const url = new URL(this.rootUrl + "/query");
     const response = await fetch(url, {
       method: "POST",
@@ -128,23 +129,23 @@ class Base<Model> {
   }
 }
 
-interface Updates {
+interface Updates<Schema> {
   /**Fields to update*/
-  set?: Record<string, unknown>;
+  set?: Record<keyof Schema, unknown>;
   /**Fields to increment.*/
-  increment?: Record<string, number>;
+  increment?: Record<keyof Schema, number>;
   /**Fields to append a list of values*/
-  append?: Record<string, unknown[]>;
+  append?: Record<keyof Schema, (typeof Schema[keyof Schema])[]>;
   /**Fields to prepend a list of values*/
-  prepend?: Record<string, unknown[]>;
+  prepend?: Record<keyof Schema, (typeof Schema[keyof Schema])[]>;
   /*Fields to remove*/
-  delete?: string[];
+  delete?: (keyof Schema)[];
 }
 
-interface QueryResponse<Model> {
+interface QueryResponse<Schema> {
   paging: {
     size: number;
     last: string;
   };
-  items: Model[];
+  items: Schema[];
 }
