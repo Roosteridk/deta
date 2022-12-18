@@ -131,7 +131,7 @@ class Base<Schema> {
 
 interface Updates<Schema> {
   /**Fields to update*/
-  set?: Record<keyof Schema, unknown>;
+  set?: Record<keyof Schema, typeof Schema[keyof Schema]>;
   /**Fields to increment.*/
   increment?: Record<keyof Schema, number>;
   /**Fields to append a list of values*/
