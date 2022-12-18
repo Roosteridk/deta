@@ -98,7 +98,7 @@ class Base<Schema> {
    * @param updates The updates to make to the item
    * @returns
    */
-  async update(key: string, updates: Updates) {
+  async update(key: string, updates: Updates<Schema>) {
     const url = new URL(this.rootUrl + "/items/" + key);
     const body = JSON.stringify(updates);
     const response = await fetch(url, {
@@ -131,13 +131,13 @@ class Base<Schema> {
 
 interface Updates<Schema> {
   /**Fields to update*/
-  set?: Record<keyof Schema, typeof Schema[keyof Schema]>;
+  set?: Record<keyof Schema, Schema[keyof Schema]>;
   /**Fields to increment.*/
   increment?: Record<keyof Schema, number>;
   /**Fields to append a list of values*/
-  append?: Record<keyof Schema, (typeof Schema[keyof Schema])[]>;
+  append?: Record<keyof Schema, Schema[keyof Schema][]>;
   /**Fields to prepend a list of values*/
-  prepend?: Record<keyof Schema, (typeof Schema[keyof Schema])[]>;
+  prepend?: Record<keyof Schema, Schema[keyof Schema][]>;
   /*Fields to remove*/
   delete?: (keyof Schema)[];
 }
