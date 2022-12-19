@@ -20,13 +20,12 @@ export class Deta {
    * @param name The name of your database
    * @returns A new database instance
    */
-  Base<Schema>(name: string) {
+  Base<Schema extends object>(name: string) {
     return new Base<Schema>(this, name);
   }
 }
 
-// TODO: Make this nested inside Deta
-class Base<Schema> {
+class Base<Schema extends object> {
   name: string;
   rootUrl: URL;
   deta: Deta;
@@ -129,7 +128,7 @@ class Base<Schema> {
   }
 }
 
-interface Updates<Schema> {
+interface Updates<Schema extends object> {
   /**Fields to update*/
   set?: Partial<Schema>;
   /**Fields to increment by a number.*/
