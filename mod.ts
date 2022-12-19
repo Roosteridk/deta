@@ -131,13 +131,13 @@ class Base<Schema> {
 
 interface Updates<Schema> {
   /**Fields to update*/
-  set?: Partial<Record<keyof Schema, typeof Schema[keyof Schema]>>;
+  set?: Partial<Schema>;
   /**Fields to increment by a number.*/
-  increment?: Partial<Record<keyof Schema, number>>
+  increment?: Record<KeysMatching<Schema, number>, number>;
   /**Fields to append a list of values*/
-  append?: Partial<Record<keyof Schema, typeof Schema[keyof Schema][]>>
+  append?: Record<KeysMatching<Schema, []>, unknown[]>;
   /**Fields to prepend a list of values*/
-  prepend?: Partial<Record<keyof Schema, typeof Schema[keyof Schema][]>>
+  prepend?: Record<KeysMatching<Schema, []>, unknown[]>;
   /**List of fields to remove*/
   delete?: (keyof Schema)[];
 }
@@ -149,3 +149,9 @@ interface QueryResponse<Schema> {
   };
   items: Schema[];
 }
+
+// Utility type from https://stackoverflow.com/questions/56863875/typescript-how-do-you-filter-a-types-properties-to-those-of-a-certain-type
+// Filters out all the keys of an object that are not of a certain type
+type KeysMatching<T extends object, V> = {
+  [K in keyof T]-?: [V] extends [T[K]] ? K : never
+}[keyof T];
